@@ -60,9 +60,30 @@ namespace ABlindLegend_bhaptics
             {
                 if (___input.justDid(InputActionName.PROTECT) != null)
                     tactsuitVr.LOG("Protect");
+                if (___input.justDid(InputActionName.DRAW) != null)
+                    tactsuitVr.LOG("Draw");
+                if (___input.justDid(InputActionName.PUSHAWAY) != null)
+                    tactsuitVr.LOG("PushAway");
+                if (___input.justDid(InputActionName.ATTACK_BEHIND) != null)
+                    tactsuitVr.LOG("AttackBehind");
+                if (___input.justDid(InputActionName.ATTACK_FRONT) != null)
+                    tactsuitVr.LOG("AttackFront");
+                if (___input.justDid(InputActionName.ATTACK_LEFT) != null)
+                    tactsuitVr.LOG("AttackLeft");
+                if (___input.justDid(InputActionName.ATTACK_RIGHT) != null)
+                    tactsuitVr.LOG("AttackRight");
             }
         }
-        
+
+        [HarmonyPatch(typeof(CombatSystem), "HitCurrentEnemy", new Type[] { typeof(float) })]
+        public class bhaptics_PlayerHitsEnemy
+        {
+            [HarmonyPostfix]
+            public static void Postfix(CombatSystem __instance)
+            {
+                tactsuitVr.LOG("HitCurrentEnemy");
+            }
+        }
 
     }
 
