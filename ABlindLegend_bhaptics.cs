@@ -51,17 +51,19 @@ namespace ABlindLegend_bhaptics
                 tactsuitVr.LOG("HurtArea: " + __instance.areaName);
             }
         }
-        /*
+        
         [HarmonyPatch(typeof(Combat), "Update", new Type[] { })]
         public class bhaptics_PlayerCombat
         {
             [HarmonyPostfix]
-            public static void Postfix(Combat __instance)
+            public static void Postfix(Combat __instance, InputController ___input)
             {
-                if (__instance.input.justDid(InputActionName.PROTECT) != null)
-                    tactsuitVr.LOG("HurtArea: " + __instance.areaName);
+                if (___input.justDid(InputActionName.PROTECT) != null)
+                    tactsuitVr.LOG("Protect");
             }
         }
-        */
+        
+
     }
+
 }
