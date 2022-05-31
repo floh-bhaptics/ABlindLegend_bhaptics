@@ -28,7 +28,7 @@ namespace ABlindLegend_bhaptics
             [HarmonyPostfix]
             public static void Postfix(Hero __instance, EnemyStats other)
             {
-                tactsuitVr.LOG("Attack " + attackDirection.ToString() + " " + other.strength.ToString() + " " + other.type.ToString());
+                //tactsuitVr.LOG("Attack " + attackDirection.ToString() + " " + other.strength.ToString() + " " + other.type.ToString());
                 tactsuitVr.PlaybackHaptics("Slice_" + attackDirection.ToString());
             }
         }
@@ -60,7 +60,7 @@ namespace ABlindLegend_bhaptics
             [HarmonyPostfix]
             public static void Postfix(HurtArea __instance)
             {
-                tactsuitVr.LOG("HurtArea: " + __instance.areaName);
+                //tactsuitVr.LOG("HurtArea: " + __instance.areaName);
             }
         }
         
@@ -72,22 +72,22 @@ namespace ABlindLegend_bhaptics
             {
                 if (___input.justDid(InputActionName.PROTECT) != null)
                 {
-                    tactsuitVr.LOG("Protect");
+                    //tactsuitVr.LOG("Protect");
                     tactsuitVr.PlaybackHaptics("BlockHands_L");
-                    tactsuitVr.PlaybackHaptics("BlockArms_L");
+                    tactsuitVr.PlaybackHaptics("Block_L");
                     tactsuitVr.PlaybackHaptics("BlockVest_L");
                     return;
                 }
                     
                 if (___input.justDid(InputActionName.DRAW) != null)
                 {
-                    tactsuitVr.LOG("Draw");
+                    //tactsuitVr.LOG("Draw");
                     tactsuitVr.PlaybackHaptics("DrawSword_R");
                 }
                     
                 if (___input.justDid(InputActionName.PUSHAWAY) != null)
                 {
-                    tactsuitVr.LOG("PushAway");
+                    //tactsuitVr.LOG("PushAway");
                     tactsuitVr.PlaybackHaptics("PushAway");
                 }
                 if (___input.justDid(InputActionName.ATTACK_BEHIND) != null)
@@ -107,7 +107,7 @@ namespace ABlindLegend_bhaptics
             [HarmonyPostfix]
             public static void Postfix(CombatSystem __instance)
             {
-                tactsuitVr.LOG("HitCurrentEnemy");
+                //tactsuitVr.LOG("HitCurrentEnemy");
                 tactsuitVr.Recoil("Sword", true);
             }
         }
