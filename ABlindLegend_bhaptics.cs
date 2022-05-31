@@ -12,6 +12,8 @@ namespace ABlindLegend_bhaptics
     public class ABlindLegend_bhaptics : MelonMod
     {
         public static TactsuitVR tactsuitVr;
+        public enum directions { front, back, left, right };
+        public static directions attackDirection = directions.front;
 
         public override void OnApplicationStart()
         {
@@ -26,19 +28,29 @@ namespace ABlindLegend_bhaptics
             [HarmonyPostfix]
             public static void Postfix(Hero __instance, EnemyStats other)
             {
-                tactsuitVr.LOG("Attack strength" + other.strength.ToString());
+                tactsuitVr.LOG("Attack " + attackDirection.ToString() + " " + other.strength.ToString() + " " + other.type.ToString());
+                tactsuitVr.PlaybackHaptics("Slice_" + attackDirection.ToString());
             }
         }
 
-        [HarmonyPatch(typeof(HeroStats), "RemoveLife", new Type[] {  })]
-        public class bhaptics_PlayerLives
+        [HarmonyPatch(typeof(Combat), "Initialize", new Type[] {  })]
+        public class bhaptics_InitCombat
         {
             [HarmonyPostfix]
-            public static void Postfix(HeroStats __instance)
+            public static void Postfix()
             {
-                int totalLives = __instance.lives + __instance.boughtLives;
-                if (totalLives == 1) tactsuitVr.StartHeartBeat();
-                else tactsuitVr.StopHeartBeat();
+                tactsuitVr.StartHeartBeat();
+            }
+        }
+
+        [HarmonyPatch(typeof(Combat), "Destroy", new Type[] { })]
+        public class bhaptics_EndCombat
+        {
+            [HarmonyPostfix]
+            public static void Postfix()
+            {
+                tactsuitVr.StopHeartBeat();
+                tactsuitVr.PlaybackHaptics("StoreSword_R");
             }
         }
 
@@ -59,19 +71,33 @@ namespace ABlindLegend_bhaptics
             public static void Postfix(Combat __instance, InputController ___input)
             {
                 if (___input.justDid(InputActionName.PROTECT) != null)
+                {
                     tactsuitVr.LOG("Protect");
+                    tactsuitVr.PlaybackHaptics("BlockHands_L");
+                    tactsuitVr.PlaybackHaptics("BlockArms_L");
+                    tactsuitVr.PlaybackHaptics("BlockVest_L");
+                    return;
+                }
+                    
                 if (___input.justDid(InputActionName.DRAW) != null)
+                {
                     tactsuitVr.LOG("Draw");
+                    tactsuitVr.PlaybackHaptics("DrawSword_R");
+                }
+                    
                 if (___input.justDid(InputActionName.PUSHAWAY) != null)
+                {
                     tactsuitVr.LOG("PushAway");
+                    tactsuitVr.PlaybackHaptics("PushAway");
+                }
                 if (___input.justDid(InputActionName.ATTACK_BEHIND) != null)
-                    tactsuitVr.LOG("AttackBehind");
+                    attackDirection = directions.back;
                 if (___input.justDid(InputActionName.ATTACK_FRONT) != null)
-                    tactsuitVr.LOG("AttackFront");
+                    attackDirection = directions.front;
                 if (___input.justDid(InputActionName.ATTACK_LEFT) != null)
-                    tactsuitVr.LOG("AttackLeft");
+                    attackDirection = directions.left;
                 if (___input.justDid(InputActionName.ATTACK_RIGHT) != null)
-                    tactsuitVr.LOG("AttackRight");
+                    attackDirection = directions.right;
             }
         }
 
@@ -82,6 +108,7 @@ namespace ABlindLegend_bhaptics
             public static void Postfix(CombatSystem __instance)
             {
                 tactsuitVr.LOG("HitCurrentEnemy");
+                tactsuitVr.Recoil("Sword", true);
             }
         }
 
